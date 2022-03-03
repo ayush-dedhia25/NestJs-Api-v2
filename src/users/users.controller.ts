@@ -1,11 +1,13 @@
-import { Controller, Get, Param, Req, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Req, Body, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { UsersService } from './users.service';
-import { Serialize } from '../interceptors/serialize.interceptor';
-import { CreateUserDto } from '../dtos';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UserSerializer } from './serializers/user.serializer';
+import { UserEntity } from './models/user.entity';
+
+import { Serialize } from '../serialize.interceptor';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { UserSerializer } from '../serializers';
 
 @Controller('users')
 export class UsersController {
@@ -13,20 +15,41 @@ export class UsersController {
    
    @UseGuards(JwtAuthGuard)
    @Serialize(UserSerializer)
-   @Get()
-   public findMe(@Req() req: Request) {
-      return this.usersService.findAllUsers(req.user);
+   @Get() // Route => /users
+   public findAllUsers() {
+      return this.usersService.findAllUsers();
    }
    
+   @UseGuards(JwtAuthGuard)
    @Serialize(UserSerializer)
-   @Get(':id')
+   @Get() // Route => /users
+   public findMe(@Req() req: Request) {
+      console.log(req.user);
+      return req.user;
+   }
+   
+   @UseGuards(JwtAuthGuard)
+   @Serialize(UserSerializer)
+   @Get(':id') // Route => /users/:id
    public findOneUser(@Param('id') id: string) {
       return this.usersService.findOneUser(parseInt(id));
    }
    
    @Serialize(UserSerializer)
-   @Post('new')
+   @Post('new') // Route => /users/new
    public createUser(@Body() body: CreateUserDto) {
       return this.usersService.createUser(body);
+   }
+   
+   @UseGuards(JwtAuthGuard)
+   @Patch(':id') // Route => /users/:id
+   public updateUser(@Param('id') userId: string, @Body() changes: Partial<UserEntity>) {
+      return this.usersService.updateUser(parseInt(userId), changes);
+   }
+   
+   @UseGuards(JwtAuthGuard)
+   @Delete(':id') // Route => /users/:id
+   public deleteUser(@Param('id') userId: string) {
+      return this.usersService.deleteUser(parseInt(userId));
    }
 }

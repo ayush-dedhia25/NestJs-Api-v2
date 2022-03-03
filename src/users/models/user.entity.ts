@@ -8,7 +8,7 @@ import {
    BeforeInsert
 } from 'typeorm';
 import * as argon2 from 'argon2';
-import { ArticleEntity } from './article.entity';
+import { ArticleEntity } from '../../articles/models/article.entity';
 
 @Entity('users_table')
 export class UserEntity {
@@ -18,14 +18,11 @@ export class UserEntity {
    @Column()
    name: string;
 
-   @Column()
+   @Column({ unique: true })
    email: string;
 
    @Column()
    password: string;
-
-   @OneToMany(type => ArticleEntity, article => article.author)
-   articles: ArticleEntity[];
 
    @CreateDateColumn()
    createdAt: Date;
@@ -37,4 +34,7 @@ export class UserEntity {
    public async hashPassword() {
       this.password = await argon2.hash(this.password);
    }
+   
+   @OneToMany(type => ArticleEntity, article => article.author)
+   articles: ArticleEntity[];
 }
