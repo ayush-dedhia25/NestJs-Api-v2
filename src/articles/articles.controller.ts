@@ -2,7 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Param, Body, Req, UseGuards } fro
 import { Request } from 'express';
 
 import { ArticlesService } from './articles.service';
-import { CreateArticleDto } from './dtos/create-article.dto';
+import { CreateArticleDto, UpdateArticleDto } from './dtos';
 import { ArticleSerializer } from './serializers/article.serializer';
 import { ArticleEntity } from './models/article.entity';
 
@@ -36,7 +36,7 @@ export class ArticlesController {
    // @UseGuards(JwtAuthGuard)
    // @Serialize(ArticleSerializer)
    @Patch(':id') // Route => /articles/:id
-   public updateArticle(@Param('id') articleId: string, @Body() changes: Partial<ArticleEntity>) {
+   public updateArticle(@Param('id') articleId: string, @Body() changes: UpdateArticleDto) {
       return this.articleService.updateArticle(parseInt(articleId), changes);
    }
    

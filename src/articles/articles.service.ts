@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { UsersService } from '../users/users.service';
 import { ArticleEntity } from './models/article.entity';
-import { CreateArticleDto } from './dtos/create-article.dto';
+import { CreateArticleDto, UpdateArticleDto } from './dtos';
 
 @Injectable()
 export class ArticlesService {
@@ -41,7 +41,7 @@ export class ArticlesService {
       }
    }
    
-   public async updateArticle(articleId: number, changes: Partial<ArticleEntity>) {
+   public async updateArticle(articleId: number, changes: UpdateArticleDto) {
       const articleExists = await this.findOneArticle(articleId);
       if (!articleExists) {
          throw new NotFoundException('Article not found!');
