@@ -13,35 +13,35 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 export class ArticlesController {
    constructor(private readonly articleService: ArticlesService) {}
    
-   @UseGuards(JwtAuthGuard)
-   @Serialize(ArticleSerializer)
+   // @UseGuards(JwtAuthGuard)
+   // @Serialize(ArticleSerializer)
    @Get() // Route => /articles
    public findAllArticles() {
       return this.articleService.findAllArticles();
    }
    
-   @UseGuards(JwtAuthGuard)
-   @Serialize(ArticleSerializer)
+   // @UseGuards(JwtAuthGuard)
+   // @Serialize(ArticleSerializer)
    @Get(':id') // Route => /articles/:id
    public findOneArticle(@Param('id') id: string) {
       return this.articleService.findOneArticle(parseInt(id));
    }
    
-   @Serialize(ArticleSerializer)
+   // @Serialize(ArticleSerializer)
    @Post('new') // Route => /articles/new
    public createArticle(@Body() body: CreateArticleDto) {
       return this.articleService.createArticle(body);
    }
    
-   @UseGuards(JwtAuthGuard)
-   @Serialize(ArticleSerializer)
+   // @UseGuards(JwtAuthGuard)
+   // @Serialize(ArticleSerializer)
    @Patch(':id') // Route => /articles/:id
    public updateArticle(@Param('id') articleId: string, @Body() changes: Partial<ArticleEntity>) {
       return this.articleService.updateArticle(parseInt(articleId), changes);
    }
    
-   @UseGuards(JwtAuthGuard)
-   @Serialize(ArticleSerializer)
+   // @UseGuards(JwtAuthGuard)
+   // @Serialize(ArticleSerializer)
    @Delete(':id') // Route => /articles/:id
    public deleteArticle(@Param('id') articleId: string) {
       return this.articleService.deleteArticle(parseInt(articleId));

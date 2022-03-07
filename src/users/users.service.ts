@@ -3,16 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UserEntity } from './models/user.entity';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 
 @Injectable()
 export class UsersService {
    constructor(
-      @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>
+      @InjectRepository(UserEntity) public readonly userRepository: Repository<UserEntity>
    ) {}
    
    public findAllUsers() {
-      return this.userRepository.find();
+      return this.userRepository.find({ relations: ['articles'] });
    }
    
    public getUserByEmail(email: string) {
@@ -36,12 +36,13 @@ export class UsersService {
       }
    }
    
-   public async updateUser(userId: number, changes: Partial<UserEntity>) {
+   public async updateUser(userId: number, changes: UpdateUserDto) {
       const userExists = await this.findOneUser(userId);
       if (!userExists) {
          throw new NotFoundException('User not found!');
       }
-      return this.userRepository.save({ id: userExists.id, ...changes });
+      this.userRepository.merge(userExists, changes);
+      return this.userRepository.save(userExists);
    }
    
    public async deleteUser(userId: number) {

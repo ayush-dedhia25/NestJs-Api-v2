@@ -2,13 +2,15 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { UsersService } from '../users/users.service';
 import { ArticleEntity } from './models/article.entity';
 import { CreateArticleDto } from './dtos/create-article.dto';
 
 @Injectable()
 export class ArticlesService {
    constructor(
-      @InjectRepository(ArticleEntity) private readonly articleRepository: Repository<ArticleEntity>
+      @InjectRepository(ArticleEntity) private readonly articleRepository: Repository<ArticleEntity>,
+      private readonly usersService: UsersService
    ) {}
    
    public findAllArticles() {
@@ -24,12 +26,15 @@ export class ArticlesService {
    }
    
    public async createArticle(articleData: CreateArticleDto) {
-      const article = await this.getArticlesByTitle(articleData.title);
-      if (article) {
+      const articles = await this.getArticlesByTitle(articleData.title);
+      console.log(articles);
+      if (articles.length) {
          throw new BadRequestException('Title already exists! Please give some unique title!');
       }
       try {
          const newArticle = await this.articleRepository.create(articleData);
+         const user = await this.usersService.findOneUser(1);
+         newArticle.author = user;
          return this.articleRepository.save(newArticle);
       } catch (err) {
          throw new BadRequestException(err.message);
@@ -37,12 +42,12 @@ export class ArticlesService {
    }
    
    public async updateArticle(articleId: number, changes: Partial<ArticleEntity>) {
-      const articleExists = this.findOneArticle(articleId);
+      const articleExists = await this.findOneArticle(articleId);
       if (!articleExists) {
          throw new NotFoundException('Article not found!');
       }
-      const updateQueryObject = { ...articleExists, ...changes };
-      return this.articleRepository.save(updateQueryObject);
+      this.articleRepository.merge(articleExists, changes);
+      return this.articleRepository.save({ id: articleExists.id, ...changes });
    }
    
    public async deleteArticle(articleId: number) {

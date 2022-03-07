@@ -35,6 +35,9 @@ export class UserEntity {
       this.password = await argon2.hash(this.password);
    }
    
-   @OneToMany(type => ArticleEntity, article => article.author)
+   @OneToMany(type => ArticleEntity, article => article.author, {
+      eager: true,
+      cascade: true,
+   })
    articles: ArticleEntity[];
 }

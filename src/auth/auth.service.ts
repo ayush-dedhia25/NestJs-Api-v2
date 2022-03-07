@@ -17,7 +17,6 @@ export class AuthService {
       if (!user) {
          throw new NotFoundException('User not found!');
       }
-      
       try {
          if (await argon2.verify(user.password, userData.password)) {
             const jwtToken = await this.signToken(user.id, user.email);
@@ -37,8 +36,8 @@ export class AuthService {
    public signToken(userId: number, email: string) {
       const payload = { sub: userId, email };
       return this.jwtService.signAsync(payload, {
-         secret: 'top-secret-data',
-         expiresIn: '60s',
+         secret: process.env.SECRET_KEY,
+         expiresIn: process.env.EXPIRATION,
       });
    }
 }

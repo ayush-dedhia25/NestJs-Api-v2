@@ -4,7 +4,8 @@ import {
    PrimaryGeneratedColumn,
    ManyToOne,
    CreateDateColumn,
-   UpdateDateColumn
+   UpdateDateColumn,
+   JoinColumn
 } from 'typeorm';
 import { UserEntity } from '../../users/models/user.entity';
 
@@ -33,5 +34,6 @@ export class ArticleEntity {
    updatedAt: Date;
 
    @ManyToOne(type => UserEntity, user => user.articles)
+   @JoinColumn()
    author: UserEntity;
 }

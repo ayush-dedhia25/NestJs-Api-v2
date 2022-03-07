@@ -2,7 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Param, Req, Body, UseGuards } fro
 import { Request } from 'express';
 
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 import { UserSerializer } from './serializers/user.serializer';
 import { UserEntity } from './models/user.entity';
 
@@ -13,41 +13,39 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 export class UsersController {
    constructor(private readonly usersService: UsersService) {}
    
-   @UseGuards(JwtAuthGuard)
-   @Serialize(UserSerializer)
+   // @UseGuards(JwtAuthGuard)
+   // @Serialize(UserSerializer)
    @Get() // Route => /users
    public findAllUsers() {
       return this.usersService.findAllUsers();
    }
    
-   @UseGuards(JwtAuthGuard)
-   @Serialize(UserSerializer)
-   @Get() // Route => /users
+   // @UseGuards(JwtAuthGuard)
+   @Get('me') // Route => /users
    public findMe(@Req() req: Request) {
-      console.log(req.user);
       return req.user;
    }
    
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Serialize(UserSerializer)
    @Get(':id') // Route => /users/:id
    public findOneUser(@Param('id') id: string) {
       return this.usersService.findOneUser(parseInt(id));
    }
    
-   @Serialize(UserSerializer)
+   // @Serialize(UserSerializer)
    @Post('new') // Route => /users/new
    public createUser(@Body() body: CreateUserDto) {
       return this.usersService.createUser(body);
    }
    
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Patch(':id') // Route => /users/:id
-   public updateUser(@Param('id') userId: string, @Body() changes: Partial<UserEntity>) {
+   public updateUser(@Param('id') userId: string, @Body() changes: UpdateUserDto) {
       return this.usersService.updateUser(parseInt(userId), changes);
    }
    
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Delete(':id') // Route => /users/:id
    public deleteUser(@Param('id') userId: string) {
       return this.usersService.deleteUser(parseInt(userId));
