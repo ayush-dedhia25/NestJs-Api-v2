@@ -1,14 +1,4 @@
-import {
-   Controller,
-   Get,
-   Post,
-   Patch,
-   Delete,
-   Param,
-   Body,
-   Req,
-   UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { ArticlesService } from './articles.service';
