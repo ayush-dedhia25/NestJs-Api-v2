@@ -17,7 +17,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
          secretOrKey: process.env.SECRET_KEY,
       });
    }
-   
+
    public validate(payload: IJwtPayload) {
       return payload;
    }

@@ -4,7 +4,7 @@ export class UpdateArticleDto {
    @IsOptional()
    @IsString()
    title: string;
-   
+
    @IsOptional()
    @IsString()
    content: string;

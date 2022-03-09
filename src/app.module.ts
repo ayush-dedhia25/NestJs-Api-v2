@@ -11,7 +11,9 @@ import { ArticlesModule } from './articles/articles.module';
    imports: [
       ConfigModule.forRoot({ isGlobal: true }),
       TypeOrmModule.forRoot(),
-      AuthModule, UsersModule, ArticlesModule
+      AuthModule,
+      UsersModule,
+      ArticlesModule,
    ],
 })
 export class AppModule {}

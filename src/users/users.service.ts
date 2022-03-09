@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+   Injectable,
+   BadRequestException,
+   NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -8,25 +12,30 @@ import { CreateUserDto, UpdateUserDto } from './dtos';
 @Injectable()
 export class UsersService {
    constructor(
-      @InjectRepository(UserEntity) public readonly userRepository: Repository<UserEntity>
+      @InjectRepository(UserEntity)
+      public readonly userRepository: Repository<UserEntity>,
    ) {}
-   
-   public findAllUsers() {
-      return this.userRepository.find({ relations: ['articles'] });
+
+   public async findAllUsers() {
+      const users = await this.userRepository.find({ relations: ['articles'] });
+      console.log(users[1].articles);
+      return users;
    }
-   
+
    public getUserByEmail(email: string) {
       return this.userRepository.find({ email });
    }
-   
+
    public findOneUser(userId: number) {
       return this.userRepository.findOne(userId);
    }
-   
+
    public async createUser(user: CreateUserDto) {
       const users = await this.getUserByEmail(user.email);
       if (users.length) {
-         throw new BadRequestException('User already exists! Please signin to continue.');
+         throw new BadRequestException(
+            'User already exists! Please signin to continue.',
+         );
       }
       try {
          const newUser = await this.userRepository.create(user);
@@ -35,7 +44,7 @@ export class UsersService {
          throw new BadRequestException(err.message);
       }
    }
-   
+
    public async updateUser(userId: number, changes: UpdateUserDto) {
       const userExists = await this.findOneUser(userId);
       if (!userExists) {
@@ -44,7 +53,7 @@ export class UsersService {
       this.userRepository.merge(userExists, changes);
       return this.userRepository.save(userExists);
    }
-   
+
    public async deleteUser(userId: number) {
       const userToDelete = await this.findOneUser(userId);
       if (!userToDelete) {
