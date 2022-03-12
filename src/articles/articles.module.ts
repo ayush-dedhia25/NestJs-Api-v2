@@ -10,5 +10,6 @@ import { ArticleEntity } from './models/article.entity';
    imports: [UsersModule, TypeOrmModule.forFeature([ArticleEntity])],
    controllers: [ArticlesController],
    providers: [ArticlesService],
+   exports: [ArticlesService]
 })
 export class ArticlesModule {}

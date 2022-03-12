@@ -1,14 +1,4 @@
-import {
-   Controller,
-   Get,
-   Post,
-   Patch,
-   Delete,
-   Param,
-   Req,
-   Body,
-   UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Req, Body, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { UsersService } from './users.service';
@@ -29,7 +19,7 @@ interface IFindMe extends UserEntity {
 export class UsersController {
    constructor(private readonly usersService: UsersService) {}
 
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Serialize(UserEntity)
    @Get() // Route => /users
    public findAllUsers() {
@@ -40,12 +30,12 @@ export class UsersController {
    @Serialize(UserEntity)
    @Get('me') // Route => /users/me
    public findMe(@Req() req: Request) {
-      const { sub, email } = req.user as IFindMe;
+      const { sub, email } = (req.user) as IFindMe;
       return this.usersService.findOneUser(sub);
    }
 
    @UseGuards(JwtAuthGuard)
-   @Serialize(UserEntity)
+   // @Serialize(UserEntity)
    @Get(':id') // Route => /users/:id
    public findOneUser(@Param('id') id: string) {
       return this.usersService.findOneUser(parseInt(id));

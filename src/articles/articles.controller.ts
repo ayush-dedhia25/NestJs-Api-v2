@@ -12,14 +12,14 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 export class ArticlesController {
    constructor(private readonly articleService: ArticlesService) {}
 
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Serialize(ArticleEntity)
    @Get() // Route => /articles
    public findAllArticles() {
       return this.articleService.findAllArticles();
    }
 
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Serialize(ArticleEntity)
    @Get(':id') // Route => /articles/:id
    public findOneArticle(@Param('id') id: string) {
@@ -32,7 +32,7 @@ export class ArticlesController {
       return this.articleService.createArticle(body);
    }
 
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Serialize(ArticleEntity)
    @Patch(':id') // Route => /articles/:id
    public updateArticle(
@@ -42,7 +42,7 @@ export class ArticlesController {
       return this.articleService.updateArticle(parseInt(articleId), changes);
    }
 
-   @UseGuards(JwtAuthGuard)
+   // @UseGuards(JwtAuthGuard)
    @Serialize(ArticleEntity)
    @Delete(':id') // Route => /articles/:id
    public deleteArticle(@Param('id') articleId: string) {
